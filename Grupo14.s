@@ -1,3 +1,11 @@
+@Integrantes del grupo
+@David Abraham Noriega Zamora 202113378
+@Sebastian Edgardo Godoy Salvatierra 202002940
+@Richard Alexandro Marroquin Arana 202102894
+
+
+@ EL ARCHIVO DE PRUEBA DEBE ESTAR TERMINADO EN $ LUEGO DEL ULTIMO SALTO DE LINEA, SI NO NO FUNCIONA
+
 .global main
 
 main:

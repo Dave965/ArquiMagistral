@@ -4,349 +4,339 @@
 .global main
 
 main:
-ldr r0, =txt_escribir
-bl printf
+LDR R0, =txt_escribir
+BL printf
 
-ldr r0, =formato_nombre
-ldr r1, =archivo_entrada
-bl scanf
+LDR R0, =formato_nombre
+LDR R1, =archivo_entrada
+BL scanf
 
-ldr r0, =archivo_entrada
-mov r1, #0
-mov r2, #0
-mov r7, #5
-svc 0
+LDR R0, =archivo_entrada
+MOV R1, #0
+MOV R2, #0
+MOV R7, #5
+SVC 0
 
-mov r4, #0 
-mov r5, #0
+MOV R4, #0 
+MOV R5, #0
 
 leer_caracter:
-push {r0, r4, r5}     
+PUSH {R0, R4, R5}     
 
-ldr r1, =buffer_ascii
-mov r2, #1            
-mov r7, #3
-svc 0
+LDR R1, =buffer_ascii
+MOV R2, #1            
+MOV R7, #3
+SVC 0
 
-pop {r0, r4, r5} 
+POP {R0, R4, R5} 
 
-ldrb r3, [r1], #1
-cmp r3, #36
-beq end
-cmp r3, #10
-beq enter
+LDRB R3, [R1], #1
+CMP R3, #36
+BEQ end
+CMP R3, #10
+BEQ enter
 
-sub r3, #48 
-mov r2, #10
-mul r4, r2  
-add r4, r3
-b leer_caracter
+SUB R3, #48 
+MOV R2, #10
+MUL R4, R2  
+ADD R4, R3
+B leer_caracter
 
 enter:
-add r5, #1
-str r4, [sp]
-mov r4, #0
-sub sp, #4
-b leer_caracter
+ADD R5, #1
+STR R4, [SP]
+MOV R4, #0
+SUB SP, #4
+B leer_caracter
 
 
 end:
-lsr r5, #1
-str r5, [sp]
+LSR R5, #1
+STR R5, [SP]
 
-ldr r0, =salto_linea
-bl printf
+LDR R0, =salto_linea
+BL printf
 
-mov r0, #1
-ldr r2, [sp]
+MOV R0, #1
+LDR R2, [SP]
 
 calculo_num_clusters:
-mul r1, r0, r0
-cmp r1, r2
+MUL R1, R0, R0
+CMP R1, R2
 bgt instanciar_clusters
-add r0, #1
-b calculo_num_clusters
+ADD R0, #1
+B calculo_num_clusters
 
 instanciar_clusters:
-sub r0, #1
-add sp, #4
+SUB R0, #1
+ADD SP, #4
 
-mov r3, #4
-mul r3, r2
-add r3, #12
-mul r3, r0
-sub sp, r3
-sub sp, #4
-str r2, [sp]
-sub sp, #4
-str r0, [sp]
+MOV R3, #4
+MUL R3, R2
+ADD R3, #12
+MUL R3, R0
+SUB SP, R3
+SUB SP, #4
+STR R2, [SP]
+SUB SP, #4
+STR R0, [SP]
 
 
-mov r2, #0
-mov r3, #0
+MOV R2, #0
+MOV R3, #0
 
 
 
 iniciar_clusters:
-ldr r0, [sp]
-ldr r1, [sp,#4]
-mov r4, #4
-sub r0, r2
-mul r4, r1
-add r4, #12
-mul r4, r0
-add r4, #4
+LDR R0, [SP]
+LDR R1, [SP,#4]
+MOV R4, #4
+SUB R0, R2
+MUL R4, R1
+ADD R4, #12
+MUL R4, R0
+ADD R4, #4
 
 
-ldr r0, [sp]
-mov r6, #8
-mov r5, #4
-mul r5, r1
-add r5, #12
-mul r5, r0 
-sub r1, r3 
-mul r1, r6
-add r5, r1 
-add r5, #4
+LDR R0, [SP]
+MOV R6, #8
+MOV R5, #4
+MUL R5, R1
+ADD R5, #12
+MUL R5, R0 
+SUB R1, R3 
+MUL R1, R6
+ADD R5, R1 
+ADD R5, #4
 
 
-ldr r0, [sp, r5] 
-str r0, [sp, r4] 
-sub r5, #4
-sub r4, #4
-ldr r0, [sp, r5] 
-str r0, [sp, r4] 
-sub r4, #4
-mov r0, #1
-str r0, [sp, r4] 
-sub r4, #4
-str r3, [sp, r4] 
-add r2, #1
-add r3, #1
+LDR R0, [SP, R5] 
+STR R0, [SP, R4] 
+SUB R5, #4
+SUB R4, #4
+LDR R0, [SP, R5] 
+STR R0, [SP, R4] 
+SUB R4, #4
+MOV R0, #1
+STR R0, [SP, R4] 
+SUB R4, #4
+STR R3, [SP, R4] 
+ADD R2, #1
+ADD R3, #1
 
-ldr r0, [sp]
-cmp r2, r0
-beq set_ultimo_cluster
-b iniciar_clusters
+LDR R0, [SP]
+CMP R2, R0
+BEQ set_ultimo_cluster
+B iniciar_clusters
 
 set_ultimo_cluster:
-sub r2, #1
-sub r3, #1
+SUB R2, #1
+SUB R3, #1
 
 loop_ultimo_cluster:
-ldr r1, [sp,#4]
-add r3, #1
-cmp r1, r3
-beq fin_inicio_clusters
-sub r4, #4
-str r3, [sp, r4]
+LDR R1, [SP,#4]
+ADD R3, #1
+CMP R1, R3
+BEQ fin_inicio_clusters
+SUB R4, #4
+STR R3, [SP, R4]
 
+LDR R0, [SP]
+LDR R1, [SP,#4]
+MOV R5, #4
+SUB R0, R2
+MUL R5, R1
+ADD R5, #12
+MUL R5, R0
+SUB R5, #4
+LDR R0, [SP, R5]
+ADD R0, #1
+STR R0, [SP, R5]
 
-ldr r0, [sp]
-ldr r1, [sp,#4]
-mov r5, #4
-sub r0, r2
-mul r5, r1
-add r5, #12
-mul r5, r0
-sub r5, #4
-ldr r0, [sp, r5]
-add r0, #1
-str r0, [sp, r5]
-
-b loop_ultimo_cluster
+B loop_ultimo_cluster
 
 fin_inicio_clusters:
 
-mov r2, #0 
+MOV R2, #0 
 
 loop_nuevos_centroides:
-ldr r1, [sp]
-cmp r2, r1
-beq fnc
+LDR R1, [SP]
+CMP R2, R1
+BEQ fnc
 
-sub sp, #12
+SUB SP, #12
 
-mov r1, #0
-str r1, [sp] 
-str r1, [sp,#4] 
-str r1, [sp,#8] 
+MOV R1, #0
+STR R1, [SP] 
+STR R1, [SP,#4] 
+STR R1, [SP,#8] 
 
+PUSH {R2}
+ADD SP, #16
+MOV R0, R2
+LDR R1, [SP]
+LDR R2, [SP, #4]
+BL func_offset_cluster
+SUB SP, #16
+POP {R2}
 
+SUB R0, #8
 
-
-push {r2}
-add sp, #16
-mov r0, r2
-ldr r1, [sp]
-ldr r2, [sp, #4]
-bl func_offset_cluster
-sub sp, #16
-pop {r2}
-
-
-
-sub r0, #8
-
-mov r1, #0 
-add sp, #12
-ldr r3, [sp, r0] 
-sub sp, #12
-sub r0, #4 
+MOV R1, #0 
+ADD SP, #12
+LDR R3, [SP, R0] 
+SUB SP, #12
+SUB R0, #4 
 
 loop_suma_pares:
-cmp r1, r3
-beq sacar_promedio
+CMP R1, R3
+BEQ sacar_promedio
 
+PUSH {R0, R1, R2, R3}
+ADD SP, #28
+LDR R0, [SP, R0]
+LDR R1, [SP]
+LDR R2, [SP, #4]
+BL func_offset_par
+SUB SP, #12
 
+LDR R1, [SP, #4] 
+ADD SP, #12
+LDR R2, [SP, R0]
+SUB SP, #12
+ADD R1, R2
+STR R1, [SP, #4]
+SUB R0, #4
+LDR R1, [SP]     
+ADD SP, #12
+LDR R2, [SP, R0]
+SUB SP, #12
+ADD R1, R2
+STR R1, [SP]
+SUB SP, #16
+POP {R0, R1, R2, R3}
 
-
-
-push {r0, r1, r2, r3}
-add sp, #28
-ldr r0, [sp, r0]
-ldr r1, [sp]
-ldr r2, [sp, #4]
-bl func_offset_par
-sub sp, #12
-
-ldr r1, [sp, #4] 
-add sp, #12
-ldr r2, [sp, r0]
-sub sp, #12
-add r1, r2
-str r1, [sp, #4]
-sub r0, #4
-ldr r1, [sp]     
-add sp, #12
-ldr r2, [sp, r0]
-sub sp, #12
-add r1, r2
-str r1, [sp]
-sub sp, #16
-pop {r0, r1, r2, r3}
-
-add r1, #1
-sub r0, #4 
-b loop_suma_pares
+ADD R1, #1
+SUB R0, #4 
+B loop_suma_pares
 
 sacar_promedio:
-vldr s0, [sp, #4] 
-vmov s1, r3
+vldr s0, [SP, #4] 
+vmov s1, R3
 vdiv.f32 s0, s0, s1
-vstr s0, [sp, #4]
-vldr s0, [sp] 
+vstr s0, [SP, #4]
+vldr s0, [SP] 
 vdiv.f32 s0, s0, s1
-vstr s0, [sp]
+vstr s0, [SP]
 
-push {r2}
-add sp, #16
-mov r0, r2
-ldr r1, [sp]
-ldr r2, [sp, #4]
-bl func_offset_cluster
-sub sp, #12
+PUSH {R2}
+ADD SP, #16
+MOV R0, R2
+LDR R1, [SP]
+LDR R2, [SP, #4]
+BL func_offset_cluster
+SUB SP, #12
 
 
-ldr r1, [sp, #4]
-add sp, #12
-ldr r2, [sp, r0]
-bl func_cambio_centroide
-str r1, [sp, r0]
-sub sp, #12
-sub r0, #4
-ldr r1, [sp]
-add sp, #12
-ldr r2, [sp, r0]
-bl func_cambio_centroide
-str r1, [sp, r0]
-sub sp, #16
-pop {r2}
-add sp, #12
-add r2, #1
-b loop_nuevos_centroides
+LDR R1, [SP, #4]
+ADD SP, #12
+LDR R2, [SP, R0]
+BL func_cambio_centroide
+STR R1, [SP, R0]
+SUB SP, #12
+SUB R0, #4
+LDR R1, [SP]
+ADD SP, #12
+LDR R2, [SP, R0]
+BL func_cambio_centroide
+STR R1, [SP, R0]
+SUB SP, #16
+POP {R2}
+ADD SP, #12
+ADD R2, #1
+B loop_nuevos_centroides
 
 
 fnc:
-sub sp, #4
-ldr r0, [sp]
-add sp, #4
-cmp r0, #0
-bne resultados
+SUB SP, #4
+LDR R0, [SP]
+ADD SP, #4
+CMP R0, #0
+BNE resultados
 
-mov r0, #0 
+MOV R0, #0 
 
 reiniciar_array_indices:
-ldr r1, [sp]
-cmp r0, r1
-beq salir_reinicio
+LDR R1, [SP]
+CMP R0, R1
+BEQ salir_reinicio
 
-ldr r1, [sp]
-ldr r2, [sp, #4]
+LDR R1, [SP]
+LDR R2, [SP, #4]
 
-push {r0}
-bl func_offset_cluster
-sub r0, #8 
-mov r1, #0
-add sp, #4
-str r1, [sp, r0]
-sub sp, #4
-pop {r0}
+PUSH {R0}
+BL func_offset_cluster
+SUB R0, #8 
+MOV R1, #0
+ADD SP, #4
+STR R1, [SP, R0]
+SUB SP, #4
+POP {R0}
 
-add r0, #1
-b reiniciar_array_indices
+ADD R0, #1
+B reiniciar_array_indices
 
 salir_reinicio:
 
-mov r0, #0 
+MOV R0, #0 
 
 loop_distancia_puntos:
-ldr r1, [sp]
-ldr r2, [sp, #4]
-cmp r0, r2
-beq fin_inicio_clusters
+LDR R1, [SP]
+LDR R2, [SP, #4]
+CMP R0, R2
+BEQ fin_inicio_clusters
 
-mov r3, #4
-mul r3, r1
-sub sp, r3
-mov r5, #0 
+MOV R3, #4
+MUL R3, R1
+SUB SP, R3
+MOV R5, #0 
 
-push {r0, r1, r2, r3}
-bl func_offset_par
-mov r4, r0
-pop {r0, r1, r2, r3}
-add sp, r3
+PUSH {R0, R1, R2, R3}
+BL func_offset_par
+MOV R4, R0
+POP {R0, R1, R2, R3}
+ADD SP, R3
 vs0a:
-ldr r6, [sp, r4] 
-vmov s0, r6 
+LDR R6, [SP, R4] 
+vmov s0, R6 
 vcvt.f32.s32 s0, s0
 vs0d:
-sub r4, #4
+SUB R4, #4
 vs1a:
-ldr r6, [sp, r4] 
-vmov s1, r6
+LDR R6, [SP, R4] 
+vmov s1, R6
 vcvt.f32.s32 s1, s1
 vs1d:
-sub sp, r3
+SUB SP, R3
 
 loop_dist_clusters:
-cmp r5, r1
-beq salir_loop_dist
+CMP R5, R1
+BEQ salir_loop_dist
 
-push {r0, r1, r2, r3}
-mov r0, r5
+PUSH {R0, R1, R2, R3}
+MOV R0, R5
 vp1:
-bl func_offset_cluster
+BL func_offset_cluster
 vs1:
-mov r4, r0
-pop {r0, r1, r2, r3}
-add sp, r3
-ldr r6, [sp, r4] 
-vmov s2, r6
-sub r4, #4
-ldr r6, [sp, r4] 
-vmov s3, r6
-sub sp, r3
+MOV R4, R0
+POP {R0, R1, R2, R3}
+ADD SP, R3
+LDR R6, [SP, R4] 
+vmov s2, R6
+SUB R4, #4
+LDR R6, [SP, R4] 
+vmov s3, R6
+SUB SP, R3
 vfas:
 
 vsub.f32 s2, s0
@@ -355,168 +345,166 @@ vsub.f32 s3, s1
 vabs.f32 s3, s3 
 vadd.f32 s2, s3 
 
-mov r4, #4
-mul r4, r5
-sub r4, r3, r4
-sub r4, #4
-vmov r6, s2
-str r6, [sp, r4]
-add r5, #1
-b loop_dist_clusters
+MOV R4, #4
+MUL R4, R5
+SUB R4, R3, R4
+SUB R4, #4
+vmov R6, s2
+STR R6, [SP, R4]
+ADD R5, #1
+B loop_dist_clusters
 
 salir_loop_dist:
 
-push {r0, r1, r2, r3}
-add r0, r3, #16
+PUSH {R0, R1, R2, R3}
+ADD R0, R3, #16
 
-bl func_indice_minimo
+BL func_indice_minimo
 vrim:
-mov r4, r0
-pop {r0, r1, r2, r3}
+MOV R4, R0
+POP {R0, R1, R2, R3}
 
-add sp, r3
+ADD SP, R3
 
-push {r0, r1, r2}
-mov r0, r4
-bl func_offset_cluster
-add sp, #12
-sub r0, #8 
-ldr r1, [sp, r0]
-add r1, #1
-str r1, [sp, r0]
-mov r2, #4
-mul r2, r1
-sub r1, r0, r2
-sub sp, #12
-pop {r0}
-add sp, #8
-str r0, [sp, r1]
-sub sp, #8
-pop {r1, r2}
+PUSH {R0, R1, R2}
+MOV R0, R4
+BL func_offset_cluster
+ADD SP, #12
+SUB R0, #8 
+LDR R1, [SP, R0]
+ADD R1, #1
+STR R1, [SP, R0]
+MOV R2, #4
+MUL R2, R1
+SUB R1, R0, R2
+SUB SP, #12
+POP {R0}
+ADD SP, #8
+STR R0, [SP, R1]
+SUB SP, #8
+POP {R1, R2}
 
-add r0, #1
-b loop_distancia_puntos
+ADD R0, #1
+B loop_distancia_puntos
 
 resultados:
-ldr r0, =salto_linea
-bl printf
-ldr r0, =encabezado_cluster
-bl printf
+LDR R0, =salto_linea
+BL printf
+LDR R0, =encabezado_cluster
+BL printf
 
-mov r6, #0
+MOV R6, #0
 
 loop_imprimir_res:
 
-ldr r1, [sp]
-cmp r6, r1
-beq salir
+LDR R1, [SP]
+CMP R6, R1
+BEQ salir
 
-mov r0, r6
-ldr r2, [sp, #4]
+MOV R0, R6
+LDR R2, [SP, #4]
 antes_entrar:
-bl func_offset_cluster
+BL func_offset_cluster
 despues_entrar:
-ldr r1, [sp, r0]
-vmov s0, r1
+LDR R1, [SP, R0]
+vmov s0, R1
 vcvt.u32.f32 s1, s0
-vmov.f32 r1, s1 
+vmov.f32 R1, s1 
 vcvt.f32.u32 s1, s1
 vsub.f32 s2, s0, s1
-mov r2, #1000
-vmov s3, r2
+MOV R2, #1000
+vmov s3, R2
 vcvt.f32.u32 s3, s3
 vmul.f32 s2, s3
 vcvt.u32.f32 s2, s2
-vmov.f32 r2, s2 
-sub r0, #4
-ldr r3, [sp, r0]
-vmov s0, r3
+vmov.f32 R2, s2 
+SUB R0, #4
+LDR R3, [SP, R0]
+vmov s0, R3
 vcvt.u32.f32 s1, s0
-vmov.f32 r3, s1 
+vmov.f32 R3, s1 
 vcvt.f32.u32 s1, s1
 vsub.f32 s2, s0, s1
 
-mov r4, #1000
-vmov s3, r4
+MOV R4, #1000
+vmov s3, R4
 vcvt.f32.u32 s3, s3
 vmul.f32 s2, s3
 vcvt.u32.f32 s2, s2
-vmov.f32 r4, s2 
+vmov.f32 R4, s2 
 
-sub r0, #4
-ldr r5, [sp, r0] 
+SUB R0, #4
+LDR R5, [SP, R0] 
 
-
-vpf1:
-ldr r0, =cluster_format
-push {r4, r5, r6}
-bl printf
-pop {r4, r5, r6}
-add r6, #1
-b loop_imprimir_res
+LDR R0, =cluster_format
+PUSH {R4, R5, R6}
+BL printf
+POP {R4, R5, R6}
+ADD R6, #1
+B loop_imprimir_res
 
 salir:
-mov r7, #1
-svc 0
+MOV R7, #1
+SVC 0
 
 func_cambio_centroide:
-cmp r2, r1
-bne f_no_cambio
-sub sp, #4
-ldr r2, [sp]
-add r2, #1
-str r2, [sp]
-add sp, #4
+CMP R2, R1
+BNE f_no_cambio
+SUB SP, #4
+LDR R2, [SP]
+ADD R2, #1
+STR R2, [SP]
+ADD SP, #4
 f_no_cambio:
-mov pc,lr
+MOV pc,lr
 
 func_indice_minimo:
-sub r1, #1
-mov r2, #0 
-sub r0, #4
-mov r3, #0
-ldr r6, [sp, r0]
-vmov s0, r6
+SUB R1, #1
+MOV R2, #0 
+SUB R0, #4
+MOV R3, #0
+LDR R6, [SP, R0]
+vmov s0, R6
 
 loop_func_indice:
-cmp r2, r1
-beq salir_func_minimo
-add r2, #1
-sub r0, #4
-ldr r6, [sp, r0]
-vmov s1, r6
+CMP R2, R1
+BEQ salir_func_minimo
+ADD R2, #1
+SUB R0, #4
+LDR R6, [SP, R0]
+vmov s1, R6
 vcmp.f32 s1, s0
 vmrs APSR_nzcv, FPSCR
 bgt cont_bucle_indice
-mov r3, r2
+MOV R3, R2
 vmov s0, s1
 cont_bucle_indice:
-b loop_func_indice
+B loop_func_indice
 
 salir_func_minimo:
-mov r0, r3
-mov pc, lr
+MOV R0, R3
+MOV pc, lr
 
 func_offset_par:
-mov r3, #4
-mov r4, #8
-mul r3, r2
-add r3, #12
-mul r3, r1
-sub r2, r0
-mul r2, r4
-add r0, r3, r2
-add r0, #4
-mov pc, lr
+MOV R3, #4
+MOV R4, #8
+MUL R3, R2
+ADD R3, #12
+MUL R3, R1
+SUB R2, R0
+MUL R2, R4
+ADD R0, R3, R2
+ADD R0, #4
+MOV pc, lr
 
 func_offset_cluster:
-mov r3, #4
-mul r3, r2
-add r3, #12
-sub r1, r0
-mul r1, r3
-add r0, r1, #4
-mov pc, lr
+MOV R3, #4
+MUL R3, R2
+ADD R3, #12
+SUB R1, R0
+MUL R1, R3
+ADD R0, R1, #4
+MOV pc, lr
 
 .data
 
